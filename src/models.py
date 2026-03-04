@@ -76,5 +76,5 @@ class Checkout:
     def __init__(self, strategy: PricingStrategy):
         self.strategy = strategy
 
-    def final_total(self, subtotal: float):
+    def total(self, subtotal: float):
         return self.strategy.final_total(subtotal)
