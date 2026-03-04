@@ -5,6 +5,15 @@ from functools import total_ordering
 @total_ordering
 @dataclass(frozen=True)
 class Quantity:
+    """
+    Represent a physical quantity consisting of a non-negative amount and a unit.
+    Immutable and Hashable.
+    Equality checks based on both amount and unit.
+
+    Attributes:
+    amount (float): Quantity size must be >= 0.
+    unit (str): Must be a non-empty string. 
+    """
     amount: float
     unit: str
 
