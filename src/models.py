@@ -1,7 +1,11 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from functools import total_ordering
+from typing import Protocol
 
+
+
+# Problem 1 — Domain Object + Data Model Integration | Quantity: Immutability, __repr__, __str__, comparisons
 @total_ordering
 @dataclass(frozen=True)
 class Quantity:
@@ -45,3 +49,32 @@ def add(q1: Quantity, q2: Quantity) -> Quantity:
         raise ValueError(f"Cannot add different units: {q1.unit} and {q2.unit}")
     
     return Quantity(q1.amount + q2.amount, q1.unit)
+
+# Problem 2 — Strategy + DIP | Order Pricing Engine
+class PricingStrategy(Protocol):
+     """Interface for pricing calculations."""
+     def final_total(self, subtotal: float) -> float:
+         return subtotal
+     
+
+class RegularPricing:
+   """Strategy for standard pricing (no discount)."""
+   def final_total(self, subtotal: float) -> float:
+       return subtotal
+class PercentDiscountPricing:
+    """Strategy for applying a percentage-based discount."""
+    def __init__(self, discount_rate: float) -> float:
+        if not (0 <= discount_rate <= 1):
+            raise ValueError("Discount rate must be between 0 and 1")
+        self.discount_rate = discount_rate
+
+    def final_total(self, subtotal: float) -> float:
+        return subtotal * (1 - self.discount_rate)
+    
+class Checkout:
+    """A checkout system that delegates pricing to an injected strategy."""
+    def __init__(self, strategy: PricingStrategy):
+        self.strategy = strategy
+
+    def final_total(self, subtotal: float):
+        return self.strategy.final_total(subtotal)
