@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments (The most important part!)
+venv/
+env/
+.env/
+ENV/
+bin/
+Include/
+Lib/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Unit test / coverage reports
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables / Secrets (NEVER push these)
+.env
+.flaskenv
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
