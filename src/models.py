@@ -71,6 +71,19 @@ class PercentDiscountPricing:
     def final_total(self, subtotal: float) -> float:
         return subtotal * (1 - self.discount_rate)
     
+# Problem 3 — Factory + Extensibility | Strategy Selection via Factory (OCP)
+# Extend Problem 2 with a factory that chooses a strategy based on configuration
+def pricing_strategy_factory(kind: str, **kwargs) -> PricingStrategy:
+    if kind == "regular":
+        return RegularPricing()
+    elif kind == "percent":
+        rate = kwargs.get("discount_rate")
+        if rate is None:
+            raise ValueError("Percent strategy requires 'discount_rate'")
+        return PercentDiscountPricing(rate)
+    else:
+        raise ValueError(f"Unknown pricing strategy kind: {kind}")
+    
 class Checkout:
     """A checkout system that delegates pricing to an injected strategy."""
     def __init__(self, strategy: PricingStrategy):
@@ -78,3 +91,8 @@ class Checkout:
 
     def total(self, subtotal: float):
         return self.strategy.final_total(subtotal)
+    
+
+
+
+
