@@ -1,6 +1,6 @@
 import pytest
 from typing import Protocol
-from src.models import PricingStrategy, RegularPricing, PercentDiscountPricing, Checkout
+from src.models import RegularPricing, PercentDiscountPricing, Checkout
 
 
 def test_regular_pricing_returns_unchanged():
@@ -43,7 +43,6 @@ def test_checkout_dependency_injection_integrity():
     class MockStrategy:
         def final_total(self, subtotal: float) -> float:
             return 42.0 # Always returns 42 regardless of input
-
 
     checkout = Checkout(MockStrategy())
     assert checkout.total(1000.0) == 42.0
