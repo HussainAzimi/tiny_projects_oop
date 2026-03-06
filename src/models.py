@@ -93,6 +93,45 @@ class Checkout:
         return self.strategy.final_total(subtotal)
     
 
+# Problem 4 — Adapter + Interface Boundaries | Normalize a Vendor Logger
+class Logger(Protocol):
+     def log(self, level: str, message: str) -> None:
+         ...
 
+class VendorLogger:
+     def write_log(self, severity: int, msg: str) -> None: 
+         print(f"{severity}, {msg}")
+
+class VendorLoggerAdapter:
+    """Adapts VendorLogger to the Logger Protocol.
+       Translates string level to integer severities and maps the 
+       'log' method to 'write_log'.
+    """
+
+    _LEVEL_MAP = {
+        "DEBUG": 10,
+        "INFO": 20,
+        "WARNING": 30,
+        "ERROR": 40,
+        "CRITICAL": 50
+    }
+
+    def __init__ (self, vendor_logger: VendorLogger):
+        self._vendor_logger = vendor_logger
+
+    def log(self, level: str, message: str) -> None:
+        severity = self._LEVEL_MAP.get(level.upper())
+        
+        if severity is None:
+           
+            raise ValueError(f"Unknown log level: {level}")
+        
+        self._vendor_logger.write_log(severity=severity, msg=message)
+
+def process_event(logger: Logger, event: str) -> None:
+    """Busniness logic that relies on the Logger interface.
+       Logs and level message when ad event is processed
+    """
+    logger.log("INFO", f"processed: {event}")
 
 
