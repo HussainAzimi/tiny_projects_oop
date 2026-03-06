@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import total_ordering
 from typing import Protocol
-
+from collections.abc import Iterator
 
 
 # Problem 1 — Domain Object + Data Model Integration | Quantity: Immutability, __repr__, __str__, comparisons
@@ -130,8 +130,27 @@ class VendorLoggerAdapter:
 
 def process_event(logger: Logger, event: str) -> None:
     """Busniness logic that relies on the Logger interface.
-       Logs and level message when ad event is processed
+       Logs and level message when ad event is processed.
     """
     logger.log("INFO", f"processed: {event}")
 
+# Problem 5 — Iterators + Generators + Clean API | Lazy Log Filtering Pipeline.
 
+def parse_events(lines: list[str]) -> Iterator[tuple[str, str]]:
+    """Parse lines into (level, message) tuple, skipping malformed lines"""
+    for line in lines:
+        if ":" in line:
+            # Split only once to handle messages that might contain colons.
+            level, message = line.split(":", 1)
+            yield (level.strip(), message.strip())
+        # Malformed lines are simply ignored, continuing the loop.
+
+def only_level(events: Iterator[tuple[str, str]], level: str) -> Iterator[tuple[str, str]]:
+    """Yield only the events that match the specified log level."""
+    for event_level, message in events:
+        if event_level == level:
+            yield(event_level, message)
+
+def count(events: Iterator[tuple[str, str]]) -> int:
+    """Consumes the iterator and returns the total number of items."""
+    return sum(1 for _ in events)
