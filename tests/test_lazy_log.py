@@ -7,16 +7,16 @@ def test_parse_event_valid_and_malformed():
     parsed = list(parse_events(logs))
 
     assert len(parsed) == 2
-    assert parsed[0] == ("INFO:", "system ready")
-    assert parsed[1] == ("ERROR:", "failed")
+    assert parsed[0] == ("INFO", "system ready")
+    assert parsed[1] == ("ERROR", "failed")
 
 
-def test_onluy_level_filtering():
+def test_only_level_filtering():
     """Verifies that only the requested log level is yielded."""
-    events = [("INFO", "a"), ("ERROR", "b"), ("INFO", "C")]
+    events = [("INFO", "a"), ("ERROR", "b"), ("INFO", "c")]
     filtered = list(only_level(iter(events), "INFO"))
 
-    assert len(filter) == 2
+    assert len(filtered) == 2
     assert all(level == "INFO" for level, msg in filtered)
     assert filtered[1][1] == "c"
 
